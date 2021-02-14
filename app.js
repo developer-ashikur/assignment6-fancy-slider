@@ -22,6 +22,7 @@ const getImages = async (query) => {
     const data = await res.json();
     if(data.hits.length === 0){
       gallery.innerHTML = '';
+      toggleSpinner(false);
       document.getElementById('error-message').style.visibility = 'visible';
     } else{
       showImages(data.hits);
