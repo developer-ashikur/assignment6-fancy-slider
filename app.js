@@ -20,7 +20,6 @@ const getImages = async (query) => {
   try{
     const res = await fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`);
     const data = await res.json();
-    console.log(data);
     if(data.hits.length === 0){
       gallery.innerHTML = '';
       document.getElementById('error-message').style.visibility = 'visible';
@@ -63,7 +62,7 @@ const selectItem = (event, img) => {
   if (item === -1) {
     sliders.push(img);
   } else {
-    sliders.pop(img);
+    sliders.splice(item, 1);
   }
 }
 var timer
