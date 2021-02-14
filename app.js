@@ -14,12 +14,23 @@ let sliders = [];
 // to create your own api key
 const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
-const getImages = (query) => {
+const getImages = async (query) => {
   toggleSpinner(true);
-  fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
-    .then(response => response.json())
-    .then(data => showImages(data.hits))
-    .catch(err => document.getElementById('error-message').classList.add('visible'));
+  document.getElementById('error-message').style.visibility = 'hidden';
+  try{
+    const res = await fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`);
+    const data = await res.json();
+    console.log(data);
+    if(data.hits.length === 0){
+      gallery.innerHTML = '';
+      document.getElementById('error-message').style.visibility = 'visible';
+    } else{
+      showImages(data.hits);
+    }
+  }
+  catch{
+    document.getElementById('error-message').style.visibility = 'visible';
+  }
 }
 
 // show images 
@@ -46,13 +57,13 @@ search.addEventListener("keypress", function(event) {
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  element.classList.add('added');
+  element.classList.toggle('added');
  
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
   } else {
-    element.classList.remove('added');
+    sliders.pop(img);
   }
 }
 var timer
