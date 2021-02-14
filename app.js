@@ -14,8 +14,17 @@ let sliders = [];
 // to create your own api key
 const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
+const getImages = (query) => {
+  toggleSpinner(true);
+  fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
+    .then(response => response.json())
+    .then(data => showImages(data.hits))
+    .catch(err => console.log(err));
+}
+
 // show images 
 const showImages = (images) => {
+  toggleSpinner(false);
   imagesArea.style.display = 'block';
   gallery.innerHTML = '';
   // show gallery title
@@ -24,7 +33,7 @@ const showImages = (images) => {
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
+    gallery.appendChild(div);
   })
 
 }
@@ -33,13 +42,6 @@ search.addEventListener("keypress", function(event) {
     if (event.key == 'Enter')
     searchBtn.click();
 });
-
-const getImages = (query) => {
-  fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
-    .then(response => response.json())
-    .then(data => showImages(data.hits))
-    .catch(err => console.log(err))
-}
 
 let slideIndex = 0;
 const selectItem = (event, img) => {
@@ -125,3 +127,8 @@ searchBtn.addEventListener('click', function () {
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
+// toggle spinner
+const toggleSpinner = (show) => {
+  const showSpinner = document.getElementById('spinner');
+  showSpinner.classList.toggle('invisible');
+}
